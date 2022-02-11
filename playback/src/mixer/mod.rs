@@ -23,6 +23,9 @@ pub trait AudioFilter {
 pub mod softmixer;
 use self::softmixer::SoftMixer;
 
+pub mod nullmixer;
+use self::nullmixer::NullMixer;
+
 #[cfg(feature = "alsa-backend")]
 pub mod alsamixer;
 #[cfg(feature = "alsa-backend")]
@@ -55,6 +58,7 @@ fn mk_sink<M: Mixer + 'static>(config: MixerConfig) -> Box<dyn Mixer> {
 
 pub const MIXERS: &[(&str, MixerFn)] = &[
     (SoftMixer::NAME, mk_sink::<SoftMixer>), // default goes first
+    (NullMixer::NAME, mk_sink::<NullMixer>),
     #[cfg(feature = "alsa-backend")]
     (AlsaMixer::NAME, mk_sink::<AlsaMixer>),
 ];

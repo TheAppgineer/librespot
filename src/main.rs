@@ -282,9 +282,9 @@ fn get_setup() -> Setup {
     // Options that have different desc's
     // depending on what backends were enabled at build time.
     #[cfg(feature = "alsa-backend")]
-    const MIXER_TYPE_DESC: &str = "Mixer to use {alsa|softvol}. Defaults to softvol.";
+    const MIXER_TYPE_DESC: &str = "Mixer to use {alsa|softvol|null}. Defaults to softvol.";
     #[cfg(not(feature = "alsa-backend"))]
-    const MIXER_TYPE_DESC: &str = "Not supported by the included audio backend(s).";
+    const MIXER_TYPE_DESC: &str = "Mixer to use {softvol|null}. Defaults to softvol.";
     #[cfg(any(
         feature = "alsa-backend",
         feature = "rodio-backend",
@@ -682,7 +682,6 @@ fn get_setup() -> Setup {
 
     #[cfg(not(feature = "alsa-backend"))]
     for a in &[
-        MIXER_TYPE,
         ALSA_MIXER_DEVICE,
         ALSA_MIXER_INDEX,
         ALSA_MIXER_CONTROL,
@@ -758,18 +757,15 @@ fn get_setup() -> Setup {
         }
     }
 
-    #[cfg(feature = "alsa-backend")]
     let mixer_type = opt_str(MIXER_TYPE);
-    #[cfg(not(feature = "alsa-backend"))]
-    let mixer_type: Option<String> = None;
 
     let mixer = mixer::find(mixer_type.as_deref()).unwrap_or_else(|| {
         invalid_error_msg(
             MIXER_TYPE,
             MIXER_TYPE_SHORT,
             &opt_str(MIXER_TYPE).unwrap_or_default(),
-            "alsa, softvol",
-            "softvol",
+            "alsa, softvol, null",
+            "softvol, null",
         );
 
         exit(1);
