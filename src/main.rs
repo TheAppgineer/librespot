@@ -302,7 +302,7 @@ fn get_setup(args: &[String]) -> Setup {
         "Specify the dither algorithm to use {none|gpdf|tpdf|tpdf_hp}. Defaults to 'tpdf' for formats S16, S24, S24_3 and 'none' for other formats.",
         "DITHER",
     )
-    .optopt("m", MIXER_TYPE, "Mixer to use {alsa|softvol}. Defaults to softvol", "MIXER")
+    .optopt("m", MIXER_TYPE, "Mixer to use {alsa|softvol|null}. Defaults to softvol", "MIXER")
     .optopt(
         "",
         "mixer-name", // deprecated
